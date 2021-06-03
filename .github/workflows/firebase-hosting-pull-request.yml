@@ -12,7 +12,7 @@ jobs:
       - run: npm ci && npm run build
         working-directory: ./frontend
         env:
-          REACT_APP_API_BASE_URL: https://us-central1-lab-1-17e01.cloudfunctions.net/routes
+          REACT_APP_API_URL: https://us-central1-lab-1-17e01.cloudfunctions.net/routes
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
