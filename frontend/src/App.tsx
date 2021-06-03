@@ -5,7 +5,7 @@ import ShoutOutList from "./components/ShoutOutList";
 function App() {
   return (
     <div className="App">
-      <h1>Success!</h1>
+      <h1>Test!</h1>
       <ShoutOutList />
     </div>
   );
