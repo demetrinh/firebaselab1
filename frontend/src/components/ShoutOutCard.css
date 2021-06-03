@@ -1,0 +1,12 @@
+.ShoutOutCard {
+  background-color: white;
+  border: 1px solid #aaa;
+  width: 200px;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 8px;
+  display: inline-block;
+}
+.ShoutOutCard_from {
+  color: #333;
+}
