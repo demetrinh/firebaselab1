@@ -9,15 +9,15 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", async (req, res) => {
-  const to = String(req.query.to || "");
-  const from = String(req.query.from || "");
+  const to = req.query.to || "";
+  const from = req.query.from || "";
   // possible query... { to: to, from: from }
-  const query: any = {};
+  const mongoQuery: any = {};
   if (to) {
-    query.to = to;
+    mongoQuery.to = to;
   }
   if (from) {
-    query.from = from;
+    mongoQuery.from = from;
   }
 
   try {
@@ -25,7 +25,7 @@ app.get("/", async (req, res) => {
     const results = await client
       .db()
       .collection<ShoutOut>("shoutouts")
-      .find()
+      .find(mongoQuery)
       .toArray();
     res.json(results);
   } catch (err) {
