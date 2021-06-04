@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { signInWithGoogle, signOut } from "../firebaseConfig";
 import ShoutOut from "../model/ShoutOut";
 import {
   createShoutOut,
@@ -22,6 +23,8 @@ function ShoutOutList() {
   return (
     <div className="ShoutOutList">
       <h2>Shout Outs!</h2>
+      <button onClick={signInWithGoogle}>Sign in with Google</button>
+      <button onClick={signOut}>Sign Out</button>
       {shoutOuts.map((eachShoutOut) => (
         <ShoutOutCard key={eachShoutOut._id} shoutOut={eachShoutOut} />
       ))}
