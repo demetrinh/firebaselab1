@@ -27,13 +27,18 @@ function ShoutOutForm({ onSubmit }: Props) {
     const files = fileInputReference.current?.files;
     if (files && files[0]) {
       const file = files[0];
+      console.log(file);
       const directoryReference = rootReference.child("images");
       directoryReference
         .child(file.name)
         .put(file)
         .then((snapshot) => {
-          snapshot.ref.getDownloadURL().then((url) => console.log(url));
+          snapshot.ref.getDownloadURL().then((url) => (shoutOut.image = url));
+          console.log(snapshot);
+          snapshot.ref.getMetadata().then((url) => console.log(url));
         });
+    } else {
+      // onSubmit(shoutOut)
     }
     onSubmit(shoutOut);
     setTo("");
@@ -74,7 +79,7 @@ function ShoutOutForm({ onSubmit }: Props) {
         ></textarea>
       </p>
       <p>
-        <label htmlFor="file">Upload a file</label>
+        <label htmlFor="file">Upload a photo</label>
         <input type="file" name="file" id="file" ref={fileInputReference} />
       </p>
       <button type="submit">Send</button>
