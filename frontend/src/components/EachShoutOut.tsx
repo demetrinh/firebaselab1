@@ -1,26 +1,33 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import ShoutOut from "../model/ShoutOut";
 import {
   createShoutOut,
   readAllShoutOuts,
+  readEachShoutOut,
 } from "../service/ShoutOutApiService";
 import ShoutOutCard from "./ShoutOutCard";
 import ShoutOutForm from "./ShoutOutForm";
 
-function ShoutOutList() {
+interface RouteParams {
+  to: string;
+}
+
+function EachShoutOut() {
+  const { to } = useParams<RouteParams>();
   const [shoutOuts, setShoutOuts] = useState<ShoutOut[]>([]);
 
   useEffect(() => {
-    readAllShoutOuts().then((shoutOutsFromApi) =>
+    readEachShoutOut(to).then((shoutOutsFromApi) =>
       setShoutOuts(shoutOutsFromApi)
     );
-  }, []);
+  }, [to]);
   function handleAddShoutOut(shoutOut: ShoutOut): void {
     createShoutOut(shoutOut).then(readAllShoutOuts);
   }
 
   return (
-    <div className="ShoutOutList">
+    <div className="EachShoutOut">
       <h2>Shout Outs!</h2>
 
       {shoutOuts.map((eachShoutOut) => (
@@ -31,4 +38,4 @@ function ShoutOutList() {
     </div>
   );
 }
-export default ShoutOutList;
+export default EachShoutOut;

@@ -1,14 +1,25 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "./App.css";
+import EachShoutOut from "./components/EachShoutOut";
 import Header from "./components/Header";
 import ShoutOutList from "./components/ShoutOutList";
 
 function App() {
   return (
-    <div className="App">
-      <Header />
-      <ShoutOutList />
-    </div>
+    <Router>
+      <div className="App">
+        <Header />
+        <Switch>
+          <Route path="/routes/:to">
+            <EachShoutOut />
+          </Route>
+          <Route path="/">
+            <ShoutOutList />
+          </Route>
+        </Switch>
+      </div>{" "}
+    </Router>
   );
 }
 

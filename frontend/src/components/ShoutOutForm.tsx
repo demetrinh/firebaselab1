@@ -1,6 +1,10 @@
-import { FormEvent, useState } from "react";
+import firebase from "../firebaseConfig";
+import { FormEvent, useRef, useState } from "react";
+import { useAuthUser } from "../auth-context";
 import ShoutOut from "../model/ShoutOut";
 import "./ShoutOutForm.css";
+
+const rootReference = firebase.storage().ref();
 
 interface Props {
   onSubmit: (shoutOut: ShoutOut) => void;
@@ -8,19 +12,32 @@ interface Props {
 
 function ShoutOutForm({ onSubmit }: Props) {
   const [to, setTo] = useState("");
-  const [from, setFrom] = useState("");
+  const from = useAuthUser()?.displayName;
   const [message, setMessage] = useState("");
+
+  const fileInputReference = useRef<HTMLInputElement>(null);
 
   function handleSubmit(e: FormEvent): void {
     e.preventDefault();
     const shoutOut: ShoutOut = {
       to: to,
-      from: from,
+      from: from as string,
       message: message,
     };
+    const files = fileInputReference.current?.files;
+    if (files && files[0]) {
+      const file = files[0];
+      const directoryReference = rootReference.child("images");
+      directoryReference
+        .child(file.name)
+        .put(file)
+        .then((snapshot) => {
+          snapshot.ref.getDownloadURL().then((url) => console.log(url));
+        });
+    }
     onSubmit(shoutOut);
     setTo("");
-    setFrom("");
+
     setMessage("");
   }
   return (
@@ -40,8 +57,7 @@ function ShoutOutForm({ onSubmit }: Props) {
         <input
           type="text"
           id="ShoutOutForm_from"
-          value={from}
-          onChange={(e) => setFrom(e.target.value)}
+          value={from as string}
           required
         />
       </p>
@@ -56,6 +72,10 @@ function ShoutOutForm({ onSubmit }: Props) {
           onChange={(e) => setMessage(e.target.value)}
           required
         ></textarea>
+      </p>
+      <p>
+        <label htmlFor="file">Upload a file</label>
+        <input type="file" name="file" id="file" ref={fileInputReference} />
       </p>
       <button type="submit">Send</button>
     </form>
