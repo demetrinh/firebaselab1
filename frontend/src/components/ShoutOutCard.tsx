@@ -11,6 +11,7 @@ function ShoutOutCard({ shoutOut }: Props) {
       <h3>Shout out to {shoutOut.to}</h3>
       <p className="ShoutOutCard_from">- from {shoutOut.from}</p>
       <p>{shoutOut.message}</p>
+      {!!shoutOut.image && <img src={shoutOut.image} alt="" />}
     </div>
   );
 }
