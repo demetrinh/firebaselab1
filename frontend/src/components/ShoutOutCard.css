@@ -10,3 +10,8 @@
 .ShoutOutCard_from {
   color: #333;
 }
+
+.ShoutOutCard_image {
+  width: 100px;
+  height: 100px;
+}

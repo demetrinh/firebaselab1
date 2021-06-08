@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { getClient } from "../db";
 import ShoutOut from "../model/ShoutOut";
+import { ObjectId } from "mongodb";
 
 const app = express();
 app.use(cors());
@@ -59,6 +60,23 @@ app.post("/", async (req, res) => {
       .insertOne(shoutOut);
     shoutOut._id = result.insertedId;
     res.status(201).json(shoutOut);
+  } catch (err) {
+    console.error("FAIL", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+});
+
+app.delete("/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const client = await getClient();
+    const result = await client
+      .db()
+      .collection<ShoutOut>("shoutouts")
+      .deleteOne({ _id: new ObjectId(id) });
+    if (result.deletedCount === 0) {
+      res.status(404).json({ message: "Not Found" });
+    } else res.status(204).end();
   } catch (err) {
     console.error("FAIL", err);
     res.status(500).json({ message: "Internal Server Error" });

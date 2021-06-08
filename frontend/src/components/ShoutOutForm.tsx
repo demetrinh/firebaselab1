@@ -8,10 +8,11 @@ const rootReference = firebase.storage().ref();
 
 interface Props {
   onSubmit: (shoutOut: ShoutOut) => void;
+  initialTo?: string;
 }
 
-function ShoutOutForm({ onSubmit }: Props) {
-  const [to, setTo] = useState("");
+function ShoutOutForm({ onSubmit, initialTo }: Props) {
+  const [to, setTo] = useState(initialTo);
   const from = useAuthUser()?.displayName;
   const [message, setMessage] = useState("");
 
@@ -20,7 +21,7 @@ function ShoutOutForm({ onSubmit }: Props) {
   function handleSubmit(e: FormEvent): void {
     e.preventDefault();
     const shoutOut: ShoutOut = {
-      to: to,
+      to: to || "",
       from: from as string,
       message: message,
     };
@@ -34,13 +35,16 @@ function ShoutOutForm({ onSubmit }: Props) {
         .put(file)
         .then((snapshot) => {
           snapshot.ref.getDownloadURL().then((url) => (shoutOut.image = url));
-          console.log(snapshot);
-          snapshot.ref.getMetadata().then((url) => console.log(url));
+          console.log(shoutOut.image);
+          snapshot.ref.getMetadata().then((url) => {
+            console.log(url);
+            onSubmit(shoutOut);
+          });
         });
     } else {
       // onSubmit(shoutOut)
     }
-    onSubmit(shoutOut);
+    // onSubmit(shoutOut);
     setTo("");
 
     setMessage("");
@@ -59,12 +63,7 @@ function ShoutOutForm({ onSubmit }: Props) {
       </p>
       <p>
         <label htmlFor="ShoutOutForm_from">From:</label>
-        <input
-          type="text"
-          id="ShoutOutForm_from"
-          value={from as string}
-          required
-        />
+        <span> {from ?? "Must sign in to submit a Shout Out!"}</span>
       </p>
       <p>
         <label htmlFor="ShoutOutForm_message">Message:</label>
@@ -80,7 +79,7 @@ function ShoutOutForm({ onSubmit }: Props) {
       </p>
       <p>
         <label htmlFor="file">Upload a photo</label>
-        <input type="file" name="file" id="file" ref={fileInputReference} />
+        <input type="file" id="file" ref={fileInputReference} />
       </p>
       <button type="submit">Send</button>
     </form>
